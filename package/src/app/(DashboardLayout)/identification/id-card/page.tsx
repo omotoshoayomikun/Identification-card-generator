@@ -3,7 +3,7 @@
 import React, { useRef } from "react";
 import PageContainer from "../../components/container/PageContainer";
 import BlankCard from "../../components/shared/BlankCard";
-import { CardContent } from "@mui/material";
+import { Button, CardContent } from "@mui/material";
 import Image from "next/image";
 import styles from "./IdCard.module.css";
 function page() {
@@ -40,8 +40,6 @@ function page() {
         </head>
         <body>
           <div class="id-card">
-            ${printContent && printContent?.innerHTML}
-          </div>
           <script>
             window.onload = function () {
               window.print();
@@ -197,6 +195,8 @@ function page() {
               </div>
             </div>
           </div>
+
+          <Button onClick={handlePrint}>Print</Button>
         </CardContent>
       </BlankCard>
     </PageContainer>

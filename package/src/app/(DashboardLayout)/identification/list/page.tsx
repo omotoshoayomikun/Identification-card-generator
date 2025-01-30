@@ -8,8 +8,41 @@ import { Button } from '@mui/material';
 import FingerprintIcon from '@mui/icons-material/Fingerprint';
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { generateIdCardHTML } from "@/utils/PrintDom";
 
 function List() {
+
+  const idCardData = {
+    localGovt: "ABEOKUTA SOUTH",
+    localGovtSub: "LOCAL GOVERNMENT",
+    address: "A.S.LG Secretariat, P.M.B 2006, Ake, Abeokuta, Ogun State, Nigeria.",
+    name: "Messiah David Louze",
+    residence: "Ijemo Agbadu, Ijemo, Abeokuta",
+    dob: "1991/09/21",
+    contact: "0803 456 7890",
+    nin: "0000 1000 1100 1110",
+    branch: "Isapon",
+    plateNumber: "FKJ-254XA",
+    unit: "#20202020",
+    union: "ACOMORAN",
+    bikeColor: "RED",
+    photo: "/images/identification/jihon.JPG",
+    qrCode: "/images/identification/qrcode.jpeg"
+  };
+  
+
+  const printIdCard = async () => {
+    const printContent = await generateIdCardHTML(idCardData);
+    const newWindow = window.open("", "_blank");
+    if(newWindow) {
+      newWindow.document.write(printContent);
+      newWindow.document.close();
+    }
+  };
+  
+
+
+
   return (
     <PageContainer
       title="Identification Card Register Page"
@@ -53,7 +86,7 @@ function List() {
                   <td className="px-6 py-4 flex gap-4">
                       <Button variant="contained" color="success" size="small"><VisibilityIcon /> View</Button>
                       <Button variant="contained" color="secondary" size="small"><EditIcon /> Edit</Button>
-                      <Button variant="contained" color="info" size="small"><FingerprintIcon /> Print</Button>
+                      <Button variant="contained" color="info" size="small" onClick={printIdCard}><FingerprintIcon /> Print</Button>
                   </td>
                 </tr>
               </tbody>
