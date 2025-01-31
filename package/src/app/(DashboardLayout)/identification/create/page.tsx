@@ -2,6 +2,7 @@
 
 import React, { useRef, useState} from "react";
 import PageContainer from "../../components/container/PageContainer";
+import { CgSpinner } from "react-icons/cg";
 import {
   Button,
   CardContent,
@@ -11,6 +12,8 @@ import {
 } from "@mui/material";
 import BlankCard from "../../components/shared/BlankCard";
 import axios from "axios";
+import { toast } from "react-toastify";
+import { ToastOption } from "@/app/lib/Data";
 
 function Create() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -104,6 +107,7 @@ console.log(formValues)
       } catch (err) {
         console.log(err);
         setLoading(false);
+        toast.error("An Error Occur saving the image!!!", ToastOption);
       }
 
     }
@@ -130,11 +134,14 @@ console.log(formValues)
   
       if (response.status === 200) {
         console.log('Form submitted successfully', response.data);
+        toast.success("Info saved successfully", ToastOption);
       } else {
+        toast.error("An Error Occur!!! Saving to database", ToastOption);
         console.error('Form submission failed', response.statusText);
       }
     } catch (error) {
       console.error('Form submission error', error);
+      toast.error("An Error Occur!!! Please Try Again", ToastOption);
     } finally {
       setLoading(false);
     }
@@ -331,7 +338,9 @@ console.log(formValues)
                   </Grid>        
               <Grid item xs={12} sm={6}>
                 <Button className="mt-[10px]" fullWidth type="submit" variant="contained" color="primary">
-                  Submit
+                  {loading ? (
+                    <CgSpinner size={25} className="animate-spin" />
+                  ) : "Submit"}
                 </Button>
               </Grid>
             </Grid>

@@ -11,6 +11,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { generateIdCardHTML } from "@/utils/PrintDom";
 import { User } from "../../../api/user/models/User";
+import { CgSpinner } from "react-icons/cg";
 
 function List() {
 
@@ -101,7 +102,12 @@ function List() {
               </thead>
               <tbody>
                 {
-                  loading ? (<div>Loading...</div>) : (
+                  loading ? (
+                    <div className="flex justify-center items-center flex-col">
+                    <div className=""><CgSpinner size={50} className="animate-spin" /></div>
+                    <div className="2xl font-bold">Loading...</div> 
+                    </div>
+                ) : (
                     users.map((user) => (
                         <tr key={user.id} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200">
                           <th
