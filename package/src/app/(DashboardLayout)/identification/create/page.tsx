@@ -74,9 +74,11 @@ console.log(formValues)
       }
 
       // Stop the camera stream
-      const stream = videoRef.current.srcObject as MediaStream;
+      const stream = videoRef.current?.srcObject as MediaStream;
       stream.getTracks().forEach((track) => track.stop());
-      videoRef.current.srcObject = null;
+      if (videoRef.current) {
+        videoRef.current.srcObject = null;
+      }
     }
 
       setIsCameraOn(false);
@@ -112,10 +114,11 @@ console.log(formValues)
   
     try {
       const uploadedImageUrl = await handleSaveImage();
-      if (!uploadedImageUrl) {
+      if (uploadedImageUrl === undefined) {
         console.error("Image upload failed");
         return;
       }
+
   
       const updatedFormValues = { ...formValues, image: uploadedImageUrl };
   
