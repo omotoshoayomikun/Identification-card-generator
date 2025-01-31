@@ -2,6 +2,7 @@ import { useMediaQuery, Box, Drawer } from "@mui/material";
 import SidebarItems from "./SidebarItems";
 import { Upgrade } from "./Updrade";
 import { Sidebar, Logo } from 'react-mui-sidebar';
+import Image from "next/image";
 
 interface ItemType {
   isMobileSidebarOpen: boolean;
@@ -72,7 +73,13 @@ const MSidebar = ({
               {/* ------------------------------------------- */}
               {/* Logo */}
               {/* ------------------------------------------- */}
-              <Logo img="/images/logos/dark-logo.svg" />
+              {/* <Logo img="/images/logos/dark-logo.svg" /> */}
+              <div className="flex gap-[20px] px-[24px] items-center mt-[20px]">
+                <div className="w-[50px] h-[50px] relative">
+                  <Image src="/images/identification/abeokuta_logo.png" alt="" fill />
+                </div>
+                <div className="text-lg font-extrabold">ABK-South</div>
+              </div>
               <Box>
                 {/* ------------------------------------------- */}
                 {/* Sidebar Items */}

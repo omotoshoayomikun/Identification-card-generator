@@ -10,12 +10,14 @@ import {
   Typography,
 } from "@mui/material";
 import BlankCard from "../../components/shared/BlankCard";
+import axios from "axios";
 
 function Create() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isCameraOn, setIsCameraOn] = useState(false);
   // const [capturedImage, setCapturedImage] = useState("");
 
+  const [loading, setLoading] = useState(false)
   const [formValues, setFormValues] = useState({
     firstName: "",
     lastName: "",
@@ -23,7 +25,9 @@ function Create() {
     dateOfBirth: "",
     branch: "",
     plateNumber: "",
-    emergencyContact: "",
+    emergencyFullName: "",
+    emergencyPhone: "",
+    emergencyAddress: "",
     unit: "",
     unionName: "",
     ninBvn: "",
@@ -68,31 +72,78 @@ console.log(formValues)
         }
         videoRef.current.srcObject = null;
       }
+
+      // Stop the camera stream
+      const stream = videoRef.current.srcObject as MediaStream;
+      stream.getTracks().forEach((track) => track.stop());
+      videoRef.current.srcObject = null;
+    }
+
       setIsCameraOn(false);
     }
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    // e.preventDefault();
-    // const errors: { [key: string]: string } = {};
 
-    // Object.keys(formValues).forEach((key) => {
-    //   if (!formValues[key as keyof typeof formValues]) {
-    //     errors[key] = `${key} is required`;
-    //   }
-    // });
+  const handleSaveImage = async () => {
+    
+      // Send the captured image to the backend
+      const formData = new FormData();
+      formData.append("file", formValues.image);
+      formData.append("upload_preset", "uploads");
+      formData.append("cloud_name", "ayomikun");
 
-    // if (Object.keys(errors).length > 0) {
-    //   console.log("Form validation errors:", errors);
-    //   return;
-    // }
+      try {
+        const cloud_response = await axios.post(
+          "https://api.cloudinary.com/v1_1/ayomikun/auto/upload",
+          formData
+        );
+        setFormValues({
+         ...formValues,
+          image: cloud_response.data.secure_url,
+        });
+      } catch (err) {
+        console.log(err);
+        setLoading(false);
+      }
 
-    // // Proceed with form submission
-    // console.log("Form submitted successfully", formValues);
+    }
+  }
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+  
+    try {
+      const uploadedImageUrl = await handleSaveImage();
+      if (!uploadedImageUrl) {
+        console.error("Image upload failed");
+        return;
+      }
+  
+      const updatedFormValues = { ...formValues, image: uploadedImageUrl };
+  
+      const response = await axios.post('/api/user', updatedFormValues, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (response.status === 200) {
+        console.log('Form submitted successfully', response.data);
+      } else {
+        console.error('Form submission failed', response.statusText);
+      }
+    } catch (error) {
+      console.error('Form submission error', error);
+    } finally {
+      setLoading(false);
+    }
   };
+  
+
 
   return (
-    <PageContainer
+        <PageContainer
       title="Identification Card Register Page"
       description="this Card Register Page"
     >
@@ -116,55 +167,55 @@ console.log(formValues)
                   <Button variant="contained" color="success" onClick={handleStartCamera}>{isCameraOn ? "Capture" : "Start Camera"}</Button>
                 </div>
               </Grid>
-                <Grid item sm={9}>
+              <Grid item sm={9}>
                 <Grid container spacing={2} className="mb-4">
                   <Grid item xs={12} sm={6}>
-                  <TextField
-                    required
-                    fullWidth
-                    label="First Name"
-                    variant="outlined"
-                    name="firstName"
-                    value={formValues.firstName}
-                    onChange={handleInputChange}
-                  />
+                    <TextField
+                      required
+                      fullWidth
+                      label="First Name"
+                      variant="outlined"
+                      name="firstName"
+                      value={formValues.firstName}
+                      onChange={handleInputChange}
+                    />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                  <TextField
-                    required
-                    fullWidth
-                    label="Last Name"
-                    variant="outlined"
-                    name="lastName"
-                    value={formValues.lastName}
-                    onChange={handleInputChange}
-                  />
+                    <TextField
+                      required
+                      fullWidth
+                      label="Last Name"
+                      variant="outlined"
+                      name="lastName"
+                      value={formValues.lastName}
+                      onChange={handleInputChange}
+                    />
                   </Grid>
                 </Grid>
 
                 <Grid container spacing={2} className="mb-4">
                   <Grid item xs={12} sm={6}>
-                  <TextField
-                    fullWidth
-                    label="Middle Name"
-                    variant="outlined"
-                    name="middleName"
-                    value={formValues.middleName}
-                    onChange={handleInputChange}
-                  />
+                    <TextField
+                      fullWidth
+                      label="Middle Name"
+                      variant="outlined"
+                      name="middleName"
+                      value={formValues.middleName}
+                      onChange={handleInputChange}
+                    />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                  <TextField
-                    required
-                    fullWidth
-                    label="Date of Birth"
-                    type="date"
-                    InputLabelProps={{ shrink: true }}
-                    variant="outlined"
-                    name="dateOfBirth"
-                    value={formValues.dateOfBirth}
-                    onChange={handleInputChange}
-                  />
+                    <TextField
+                      required
+                      fullWidth
+                      label="Date of Birth"
+                      type="date"
+                      InputLabelProps={{ shrink: true }}
+                      variant="outlined"
+                      name="dateOfBirth"
+                      value={formValues.dateOfBirth}
+                      onChange={handleInputChange}
+                    />
                   </Grid>
                 </Grid>
                 <Grid container spacing={2} className="mb-4">
@@ -196,39 +247,27 @@ console.log(formValues)
                   <TextField
                     required
                     fullWidth
-                    label="Emergency Contact"
+                    label="Union Name"
                     variant="outlined"
-                    name="emergencyContact"
-                    value={formValues.emergencyContact}
+                    name="unionName"
+                    value={formValues.unionName}
                     onChange={handleInputChange}
                   />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                  <TextField
-                    required
-                    fullWidth
-                    label="Unit"
-                    variant="outlined"
-                    name="unit"
-                    value={formValues.unit}
-                    onChange={handleInputChange}
-                  />
-                  </Grid>
+                    <Grid item xs={12} sm={6}>
+                    <TextField
+                      required
+                      fullWidth
+                      label="Unit"
+                      variant="outlined"
+                      name="unit"
+                      value={formValues.unit}
+                      onChange={handleInputChange}
+                    />
+                    </Grid>
                 </Grid>
-                </Grid>
-
-                <Grid item xs={12} sm={4}>
-                <TextField
-                  required
-                  fullWidth
-                  label="Union Name"
-                  variant="outlined"
-                  name="unionName"
-                  value={formValues.unionName}
-                  onChange={handleInputChange}
-                />
-                </Grid>
-                <Grid item xs={12} sm={4}>
+                </Grid>     
+                <Grid item xs={12} sm={5}>
                 <TextField
                   required
                   fullWidth
@@ -239,19 +278,59 @@ console.log(formValues)
                   onChange={handleInputChange}
                 />
                 </Grid>
-                <Grid item xs={12} sm={4}>
-                <TextField
-                  required
-                  fullWidth
-                  label="Address"
-                  variant="outlined"
-                  name="address"
-                  value={formValues.address}
-                  onChange={handleInputChange}
-                />
+                <Grid item xs={12} sm={7}>
+                  <TextField
+                    required
+                    fullWidth
+                    multiline
+                    minRows={1}
+                    label="Address"
+                    variant="outlined"
+                    name="address"
+                    value={formValues.address}
+                    onChange={handleInputChange}
+                  />
                 </Grid>
-              <Grid item xs={12}>
-                <Button type="submit" variant="contained" color="primary">
+                <Grid item xs={12} sm={12}>
+                  <hr />
+                </Grid>
+                 <Grid item xs={12} sm={6}>
+                  <TextField
+                    required
+                    fullWidth
+                    label="Emergency Full Name"
+                    variant="outlined"
+                    name="emergencyFullName"
+                    value={formValues.emergencyFullName}
+                    onChange={handleInputChange}
+                  />
+                  </Grid> 
+                  <Grid item xs={12} sm={6}>
+                  <TextField
+                    required
+                    fullWidth
+                    label="Emergency Phone Number"
+                    variant="outlined"
+                    name="emergencyPhoneNumber"
+                    value={formValues.emergencyPhone}
+                    onChange={handleInputChange}
+                  />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                  <TextField
+                    required
+                    fullWidth
+                    multiline
+                    minRows={1}
+                    label="Emergency Address"
+                    variant="outlined"
+                    name="emergencyAddress"
+                    value={formValues.emergencyAddress}
+                    onChange={handleInputChange}
+                  />
+                  </Grid>        
+              <Grid item xs={12} sm={6}>
+                <Button className="mt-[10px]" fullWidth type="submit" variant="contained" color="primary">
                   Submit
                 </Button>
               </Grid>

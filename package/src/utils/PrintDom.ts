@@ -1,4 +1,6 @@
-export const generateIdCardHTML = (data: any) => {
+import { User } from "@/app/api/user/models/User";
+
+export const generateIdCardHTML = (data: User) => {
   return `
      <html>
           <head>
@@ -238,9 +240,9 @@ export const generateIdCardHTML = (data: any) => {
             <img src="/images/identification/abeokuta_logo.png" alt="logo image"  style="width: 100%; height: 100%" />
           </div>
           <div>
-            <div class="title1">${data.localGovt}</div>
-            <div class="title2">${data.localGovtSub}</div>
-            <div class="subtext">${data.address}</div>
+            <div class="title1">ABEOKUTA SOUTH</div>
+            <div class="title2">LOCAL GOVERNMENT</div>
+            <div class="subtext">A.S.LG Secretariat, P.M.B 2006, Ake, Abeokuta, Ogun State,Nigeria.</div>
           </div>
           <div class="img_top">
             <img src="/images/identification/abeokuta_logo.png" alt="logo image" style="width: 100%; height: 100%" />
@@ -252,31 +254,31 @@ export const generateIdCardHTML = (data: any) => {
         <div class="bottom_watermark">
           <div class="first_grid">
             <div class="first_img_grid">
-              <img src="${data.photo}" alt="profile photo" style="width: 100%; height: 100%" />
+              <img src="${data.image}" alt="profile photo" style="width: 100%; height: 100%" />
             </div>
             <div>
               <div class="nin_text">NIN / BVN</div>
-              <div class="nin_text2">${data.nin}</div>
+              <div class="nin_text2">${data.ninBvn}</div>
             </div>
           </div>
   
           <div class="second_grid">
             <div>
               <div class="name_text">Name</div>
-              <div class="name_text2">${data.name}</div>
+              <div class="name_text2">${data.firstName} ${data.lastName}</div>
             </div>
             <div class="mb-1">
               <div class="smalltext">Address</div>
-              <div class="txtzz">${data.residence}</div>
+              <div class="txtzz">${data.emergencyAddress}</div>
             </div>
             <div class="box">
               <div class="w-55">
                 <div class="smalltext">Date of Birth</div>
-                <div class="smalltext1">${data.dob}</div>
+                <div class="smalltext1">${data.dateOfBirth}</div>
               </div>
               <div>
                 <div class="smalltext">Emergency Contact</div>
-                <div class="smalltext1">${data.contact}</div>
+                <div class="smalltext1">${data.emergencyPhone}</div>
               </div>
             </div>
   
@@ -298,7 +300,7 @@ export const generateIdCardHTML = (data: any) => {
               </div>
               <div>
                 <div class="smalltext">Union Name</div>
-                <div class="smalltext1">${data.union}</div>
+                <div class="smalltext1">${data.unionName}</div>
               </div>
             </div>
           </div>
@@ -306,10 +308,7 @@ export const generateIdCardHTML = (data: any) => {
           <div class="third_grid">
             <div class="ASLG">ASLG</div>
             <div class="qrcode">
-              <img src="${data.qrCode}" alt="QR Code" style="width: 100%; height: 100%" />
-            </div>
-            <div class="bov_text">
-              COLOR (BIKE): <span style="font-weight: 700">${data.bikeColor}</span>
+              <img src="/images/identification/qrcode.jpeg" alt="QR Code" style="width: 100%; height: 100%" />
             </div>
           </div>
   

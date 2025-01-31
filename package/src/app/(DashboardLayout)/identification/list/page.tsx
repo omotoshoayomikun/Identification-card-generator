@@ -1,7 +1,8 @@
 "use client"
 
-import React from "react";
+import React, { useEffect, useState} from "react";
 import PageContainer from "../../components/container/PageContainer";
+import axios from "axios";
 import BlankCard from "../../components/shared/BlankCard";
 import { CardContent } from "@mui/material";
 import { Button } from '@mui/material';
@@ -9,8 +10,34 @@ import FingerprintIcon from '@mui/icons-material/Fingerprint';
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { generateIdCardHTML } from "@/utils/PrintDom";
+import { User } from "../../../api/user/models/User";
 
 function List() {
+
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(false)
+
+  
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get('/api/user');
+        if (response.status === 200) {
+          setUsers(response.data.data);
+          setLoading(false);
+        } else {
+          console.error('Failed to fetch users', response.statusText);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error('Error fetching users', error);
+        setLoading(false);
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   const idCardData = {
     localGovt: "ABEOKUTA SOUTH",
@@ -31,9 +58,9 @@ function List() {
   };
   
 
-  const printIdCard = async () => {
-    const printContent = await generateIdCardHTML(idCardData);
-    const newWindow = window.open("", "_blank");
+  const printIdCard = async (user: User) => {
+    const printContent = await generateIdCardHTML(user);
+    const newWindow = window.open("", "");
     if(newWindow) {
       newWindow.document.write(printContent);
       newWindow.document.close();
@@ -73,22 +100,30 @@ function List() {
                 </tr>
               </thead>
               <tbody>
-                <tr className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200">
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  >
-                    Apple MacBook Pro 17"
-                  </th>
-                  <td className="px-6 py-4">Silver</td>
-                  <td className="px-6 py-4">Laptop</td>
-                  <td className="px-6 py-4">$2999</td>
-                  <td className="px-6 py-4 flex gap-4">
-                      <Button variant="contained" color="success" size="small"><VisibilityIcon /> View</Button>
-                      <Button variant="contained" color="secondary" size="small"><EditIcon /> Edit</Button>
-                      <Button variant="contained" color="info" size="small" onClick={printIdCard}><FingerprintIcon /> Print</Button>
-                  </td>
-                </tr>
+                {
+                  loading ? (<div>Loading...</div>) : (
+                    users.map((user) => (
+                        <tr key={user.id} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200">
+                          <th
+                            scope="row"
+                            className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                          >
+                            {`${user.firstName} ${user.lastName}`}
+                          </th>
+                          <td className="px-6 py-4">{user.dateOfBirth}</td>
+                          <td className="px-6 py-4">{user.plateNumber}</td>
+                          <td className="px-6 py-4">{user.unit}</td>
+                          <td className="px-6 py-4 flex gap-4">
+                            <Button variant="contained" color="success" size="small"><VisibilityIcon /> View</Button>
+                            <Button variant="contained" color="secondary" size="small"><EditIcon /> Edit</Button>
+                            <Button variant="contained" color="info" size="small" onClick={() => printIdCard(user)}>
+                              <FingerprintIcon /> Print
+                            </Button>
+                          </td>
+                        </tr>
+                      ))
+                  )
+                }
               </tbody>
             </table>
           </div>
