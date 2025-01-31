@@ -7,53 +7,7 @@ import { Button, CardContent } from "@mui/material";
 import Image from "next/image";
 import styles from "./IdCard.module.css";
 function page() {
-  const idCardRef = useRef(null);
 
-  const handlePrint = () => {
-    const printContent = idCardRef.current;
-    const newWindow = window.open("", "", "width=300,height=500");
-    if(newWindow) {
-      newWindow.document.write(`
-        <html>
-        <head>
-          <title>Print ID Card</title>
-          <style>
-            @media print {
-              body {
-                margin: 0;
-                padding: 0;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-              }
-              .id-card {
-                width: 3.375in; /* Standard ID card width */
-                height: 2.125in; /* Standard ID card height */
-                padding: 10px;
-                border: 1px solid #000;
-                text-align: center;
-                font-family: Arial, sans-serif;
-                background: white;
-              }
-            }
-          </style>
-        </head>
-        <body>
-          <div class="id-card">
-          <script>
-            window.onload = function () {
-              window.print();
-              window.onafterprint = function () {
-                window.close();
-              };
-            };
-          </script>
-        </body>
-        </html>
-      `);
-      newWindow.document.close();
-    }
-  };
 
   return (
     <PageContainer
@@ -195,8 +149,6 @@ function page() {
               </div>
             </div>
           </div>
-
-          <Button onClick={handlePrint}>Print</Button>
         </CardContent>
       </BlankCard>
     </PageContainer>

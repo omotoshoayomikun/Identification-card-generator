@@ -3,8 +3,18 @@ export const generateIdCardHTML = (data: any) => {
      <html>
           <head>
             <title>Print ID Card</title>
-            <link rel="stylesheet" type="text/css" href="/styles/print.css">
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+
             <style>
+            * {
+              box-sizing: border-box;           
+            }
+              body {
+                font-family: "Plus Jakarta Sans", serif;
+              }
+
               .content {
                 width: 3.375in;
                 height: 2.13in;
@@ -189,7 +199,7 @@ export const generateIdCardHTML = (data: any) => {
                 top: -20px;
                 left: -20px;
               }
-                            .bottom_watermark::before {
+              .bottom_watermark::before {
                 content: "ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ABEOKUTA SOUTH LOCAL GOVERNMENT ";
                 color: green;
                 font-size: 3px;
@@ -222,38 +232,38 @@ export const generateIdCardHTML = (data: any) => {
             </style>
           </head>
           <body>
-      <div class="id-card">
-        <div class="top-watermark">
-          <div class="img-top">
-            <img src="/images/identification/abeokuta_logo.png" alt="logo image" />
+      <div class="content">
+        <div class="top_watermark">
+          <div class="img_top">
+            <img src="/images/identification/abeokuta_logo.png" alt="logo image"  style="width: 100%; height: 100%" />
           </div>
           <div>
-            <h1 class="title1">${data.localGovt}</h1>
-            <h1 class="title2">${data.localGovtSub}</h1>
-            <h6 class="subtext">${data.address}</h6>
+            <div class="title1">${data.localGovt}</div>
+            <div class="title2">${data.localGovtSub}</div>
+            <div class="subtext">${data.address}</div>
           </div>
-          <div class="img-top">
-            <img src="/images/identification/abeokuta_logo.png" alt="logo image" />
+          <div class="img_top">
+            <img src="/images/identification/abeokuta_logo.png" alt="logo image" style="width: 100%; height: 100%" />
           </div>
         </div>
         <div class="line1"></div>
         <div class="line2"></div>
   
-        <div class="bottom-watermark">
-          <div class="first-grid">
-            <div class="first-img-grid">
-              <img src="${data.photo}" alt="profile photo" />
+        <div class="bottom_watermark">
+          <div class="first_grid">
+            <div class="first_img_grid">
+              <img src="${data.photo}" alt="profile photo" style="width: 100%; height: 100%" />
             </div>
             <div>
-              <div class="nin-text">NIN / BVN</div>
-              <div class="nin-text2">${data.nin}</div>
+              <div class="nin_text">NIN / BVN</div>
+              <div class="nin_text2">${data.nin}</div>
             </div>
           </div>
   
-          <div class="second-grid">
+          <div class="second_grid">
             <div>
-              <div class="name-text">Name</div>
-              <div class="name-text2">${data.name}</div>
+              <div class="name_text">Name</div>
+              <div class="name_text2">${data.name}</div>
             </div>
             <div class="mb-1">
               <div class="smalltext">Address</div>
@@ -293,18 +303,18 @@ export const generateIdCardHTML = (data: any) => {
             </div>
           </div>
   
-          <div class="third-grid">
+          <div class="third_grid">
             <div class="ASLG">ASLG</div>
             <div class="qrcode">
-              <img src="${data.qrCode}" alt="QR Code" />
+              <img src="${data.qrCode}" alt="QR Code" style="width: 100%; height: 100%" />
             </div>
-            <div class="bov-text">
+            <div class="bov_text">
               COLOR (BIKE): <span style="font-weight: 700">${data.bikeColor}</span>
             </div>
           </div>
   
-          <div class="blur-image">
-            <img src="/images/identification/abeokuta_logo.png" alt="background watermark" />
+          <div class="blur_image">
+            <img src="/images/identification/abeokuta_logo.png" alt="background watermark" style="width: 100%; height: 100%" />
           </div>
         </div>
       </div>
