@@ -5,6 +5,7 @@ import { Grid, Box, Card, Stack, Typography } from "@mui/material";
 import PageContainer from "@/app/(DashboardLayout)/components/container/PageContainer";
 import Logo from "@/app/(DashboardLayout)/layout/shared/logo/Logo";
 import AuthLogin from "../auth/AuthLogin";
+import Image from "next/image";
 
 const Login2 = () => {
   return (
@@ -45,19 +46,18 @@ const Login2 = () => {
               sx={{ p: 4, zIndex: 1, width: "100%", maxWidth: "500px" }}
             >
               <Box display="flex" alignItems="center" justifyContent="center">
-                <Logo />
+                <div className="flex gap-[20px] px-[24px] items-center justify-center">
+                  <div className="w-[50px] h-[50px] relative">
+                    <Image
+                      src="/images/identification/abeokuta_logo.png"
+                      alt=""
+                      fill
+                    />
+                  </div>
+                  <div className="text-lg font-extrabold">ABK-South</div>
+                </div>
               </Box>
               <AuthLogin
-                subtext={
-                  <Typography
-                    variant="subtitle1"
-                    textAlign="center"
-                    color="textSecondary"
-                    mb={1}
-                  >
-                    Your Social Campaigns
-                  </Typography>
-                }
                 subtitle={
                   <Stack
                     direction="row"
@@ -65,14 +65,14 @@ const Login2 = () => {
                     justifyContent="center"
                     mt={3}
                   >
-                    <Typography
+                    {/* <Typography
                       color="textSecondary"
                       variant="h6"
                       fontWeight="500"
                     >
                       New to Modernize?
-                    </Typography>
-                    <Typography
+                    </Typography> */}
+                    {/* <Typography
                       component={Link}
                       href="/authentication/register"
                       fontWeight="500"
@@ -82,7 +82,7 @@ const Login2 = () => {
                       }}
                     >
                       Create an account
-                    </Typography>
+                    </Typography> */}
                   </Stack>
                 }
               />

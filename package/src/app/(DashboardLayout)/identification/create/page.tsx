@@ -81,8 +81,6 @@ console.log(formValues)
 
       setIsCameraOn(false);
     }
-  };
-
 
   const handleSaveImage = async () => {
     
@@ -107,7 +105,6 @@ console.log(formValues)
       }
 
     }
-  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

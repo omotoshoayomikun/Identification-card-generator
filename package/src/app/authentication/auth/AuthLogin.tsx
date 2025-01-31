@@ -1,3 +1,5 @@
+"use client"
+
 import React from "react";
 import {
   Box,
@@ -11,6 +13,7 @@ import {
 import Link from "next/link";
 
 import CustomTextField from "@/app/(DashboardLayout)/components/forms/theme-elements/CustomTextField";
+import { useRouter } from "next/navigation";
 
 interface loginType {
   title?: string;
@@ -18,7 +21,15 @@ interface loginType {
   subtext?: JSX.Element | JSX.Element[];
 }
 
-const AuthLogin = ({ title, subtitle, subtext }: loginType) => (
+const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
+
+  const routering = useRouter();
+
+  const handleLogin = () => {
+    routering.push("/dashboard");
+  }
+
+  return (
   <>
     {title ? (
       <Typography fontWeight="700" variant="h2" mb={1}>
@@ -84,15 +95,15 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => (
         variant="contained"
         size="large"
         fullWidth
-        component={Link}
-        href="/"
-        type="submit"
+        onClick={handleLogin}
       >
         Sign In
       </Button>
     </Box>
     {subtitle}
   </>
-);
+
+  )
+};
 
 export default AuthLogin;
