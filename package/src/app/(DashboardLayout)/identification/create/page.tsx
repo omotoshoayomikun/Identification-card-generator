@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState} from "react";
+import React, { useRef, useState } from "react";
 import PageContainer from "../../components/container/PageContainer";
 import { CgSpinner } from "react-icons/cg";
 import {
@@ -20,7 +20,7 @@ function Create() {
   const [isCameraOn, setIsCameraOn] = useState(false);
   // const [capturedImage, setCapturedImage] = useState("");
 
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const [formValues, setFormValues] = useState({
     firstName: "",
     lastName: "",
@@ -35,23 +35,23 @@ function Create() {
     unionName: "",
     ninBvn: "",
     address: "",
-    image: ""
+    image: "",
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormValues({
       ...formValues,
-      [name]: value
+      [name]: value,
     });
   };
 
-console.log(formValues)
+  console.log(formValues);
 
   const handleStartCamera = async () => {
     if (!isCameraOn) {
       // setCapturedImage("");
-      setFormValues({ ...formValues, image: "" })
+      setFormValues({ ...formValues, image: "" });
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
@@ -70,7 +70,7 @@ console.log(formValues)
           ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
           const imageDataUrl = canvas.toDataURL("image/jpeg");
           // setCapturedImage(imageDataUrl);
-          setFormValues({ ...formValues, image: imageDataUrl })
+          setFormValues({ ...formValues, image: imageDataUrl });
           console.log(imageDataUrl); // You can handle the captured image data URL here
         }
         videoRef.current.srcObject = null;
@@ -84,38 +84,36 @@ console.log(formValues)
       }
     }
 
-      setIsCameraOn(false);
-    }
+    setIsCameraOn(false);
+  };
 
   const handleSaveImage = async () => {
-    
-      // Send the captured image to the backend
-      const formData = new FormData();
-      formData.append("file", formValues.image);
-      formData.append("upload_preset", "uploads");
-      formData.append("cloud_name", "ayomikun");
+    // Send the captured image to the backend
+    const formData = new FormData();
+    formData.append("file", formValues.image);
+    formData.append("upload_preset", "uploads");
+    formData.append("cloud_name", "ayomikun");
 
-      try {
-        const cloud_response = await axios.post(
-          "https://api.cloudinary.com/v1_1/ayomikun/auto/upload",
-          formData
-        );
-        setFormValues({
-         ...formValues,
-          image: cloud_response.data.secure_url,
-        });
-      } catch (err) {
-        console.log(err);
-        setLoading(false);
-        toast.error("An Error Occur saving the image!!!", ToastOption);
-      }
-
+    try {
+      const cloud_response = await axios.post(
+        "https://api.cloudinary.com/v1_1/ayomikun/auto/upload",
+        formData
+      );
+      setFormValues({
+        ...formValues,
+        image: cloud_response.data.secure_url,
+      });
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+      toast.error("An Error Occur saving the image!!!", ToastOption);
     }
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-  
+
     try {
       const uploadedImageUrl = await handleSaveImage();
       if (uploadedImageUrl === undefined) {
@@ -123,55 +121,82 @@ console.log(formValues)
         return;
       }
 
-  
       const updatedFormValues = { ...formValues, image: uploadedImageUrl };
-  
-      const response = await axios.post('/api/user', updatedFormValues, {
+
+      const response = await axios.post("/api/user", updatedFormValues, {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
-  
+
       if (response.status === 200) {
-        console.log('Form submitted successfully', response.data);
+        setFormValues({
+          firstName: "",
+          lastName: "",
+          middleName: "",
+          dateOfBirth: "",
+          branch: "",
+          plateNumber: "",
+          emergencyFullName: "",
+          emergencyPhone: "",
+          emergencyAddress: "",
+          unit: "",
+          unionName: "",
+          ninBvn: "",
+          address: "",
+          image: "",
+        });
+
+        console.log("Form submitted successfully", response.data);
         toast.success("Info saved successfully", ToastOption);
       } else {
         toast.error("An Error Occur!!! Saving to database", ToastOption);
-        console.error('Form submission failed', response.statusText);
+        console.error("Form submission failed", response.statusText);
       }
     } catch (error) {
-      console.error('Form submission error', error);
+      console.error("Form submission error", error);
       toast.error("An Error Occur!!! Please Try Again", ToastOption);
     } finally {
       setLoading(false);
     }
   };
-  
-
 
   return (
-        <PageContainer
+    <PageContainer
       title="Identification Card Register Page"
       description="this Card Register Page"
     >
       <h1 className="mb-[20px] text-3xl font">Identification Page</h1>
       <BlankCard>
         <CardContent>
-          <form noValidate autoComplete="off"  onSubmit={handleSubmit}>
+          <form noValidate autoComplete="off" onSubmit={handleSubmit}>
             <Grid container spacing={2}>
               <Grid item sm={3}>
                 <div className="w-full h-[205px] border-[1px] border-solid border-[rgb(188, 188, 188)] mb-4">
-                  {
-                    formValues.image ? (
-                      <img src={formValues.image} alt="Captured" className="w-[100%] h-full border" />
-                    ) : (
-                      <video crossOrigin="anonymous" ref={videoRef} autoPlay className="h-full"></video>
-                    )
-                  }
+                  {formValues.image ? (
+                    <img
+                      src={formValues.image}
+                      alt="Captured"
+                      className="w-[100%] h-full border"
+                    />
+                  ) : (
+                    <video
+                      crossOrigin="anonymous"
+                      ref={videoRef}
+                      autoPlay
+                      className="h-full"
+                    ></video>
+                  )}
                 </div>
                 <div className="flex justify-center">
                   {/* <Button variant="contained">Select File</Button> */}
-                  <Button variant="contained" color="success" onClick={handleStartCamera}>{isCameraOn ? "Capture" : "Start Camera"}</Button>
+                  <Button
+                    variant="contained"
+                    color="success"
+                    onClick={handleStartCamera}
+                  >
+                    {isCameraOn ? "Capture" : "Start Camera"}
+                  </Button>
                 </div>
               </Grid>
               <Grid item sm={9}>
@@ -227,41 +252,41 @@ console.log(formValues)
                 </Grid>
                 <Grid container spacing={2} className="mb-4">
                   <Grid item xs={12} sm={6}>
-                  <TextField
-                    required
-                    fullWidth
-                    label="Branch"
-                    variant="outlined"
-                    name="branch"
-                    value={formValues.branch}
-                    onChange={handleInputChange}
-                  />
+                    <TextField
+                      required
+                      fullWidth
+                      label="Branch"
+                      variant="outlined"
+                      name="branch"
+                      value={formValues.branch}
+                      onChange={handleInputChange}
+                    />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                  <TextField
-                    required
-                    fullWidth
-                    label="Plate Number"
-                    variant="outlined"
-                    name="plateNumber"
-                    value={formValues.plateNumber}
-                    onChange={handleInputChange}
-                  />
+                    <TextField
+                      required
+                      fullWidth
+                      label="Plate Number"
+                      variant="outlined"
+                      name="plateNumber"
+                      value={formValues.plateNumber}
+                      onChange={handleInputChange}
+                    />
                   </Grid>
                 </Grid>
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
-                  <TextField
-                    required
-                    fullWidth
-                    label="Union Name"
-                    variant="outlined"
-                    name="unionName"
-                    value={formValues.unionName}
-                    onChange={handleInputChange}
-                  />
+                    <TextField
+                      required
+                      fullWidth
+                      label="Union Name"
+                      variant="outlined"
+                      name="unionName"
+                      value={formValues.unionName}
+                      onChange={handleInputChange}
+                    />
                   </Grid>
-                    <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={6}>
                     <TextField
                       required
                       fullWidth
@@ -271,10 +296,10 @@ console.log(formValues)
                       value={formValues.unit}
                       onChange={handleInputChange}
                     />
-                    </Grid>
+                  </Grid>
                 </Grid>
-                </Grid>     
-                <Grid item xs={12} sm={5}>
+              </Grid>
+              <Grid item xs={12} sm={5}>
                 <TextField
                   required
                   fullWidth
@@ -284,63 +309,71 @@ console.log(formValues)
                   value={formValues.ninBvn}
                   onChange={handleInputChange}
                 />
-                </Grid>
-                <Grid item xs={12} sm={7}>
-                  <TextField
-                    required
-                    fullWidth
-                    multiline
-                    minRows={1}
-                    label="Address"
-                    variant="outlined"
-                    name="address"
-                    value={formValues.address}
-                    onChange={handleInputChange}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={12}>
-                  <hr />
-                </Grid>
-                 <Grid item xs={12} sm={6}>
-                  <TextField
-                    required
-                    fullWidth
-                    label="Emergency Full Name"
-                    variant="outlined"
-                    name="emergencyFullName"
-                    value={formValues.emergencyFullName}
-                    onChange={handleInputChange}
-                  />
-                  </Grid> 
-                  <Grid item xs={12} sm={6}>
-                  <TextField
-                    required
-                    fullWidth
-                    label="Emergency Phone Number"
-                    variant="outlined"
-                    name="emergencyPhoneNumber"
-                    value={formValues.emergencyPhone}
-                    onChange={handleInputChange}
-                  />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                  <TextField
-                    required
-                    fullWidth
-                    multiline
-                    minRows={1}
-                    label="Emergency Address"
-                    variant="outlined"
-                    name="emergencyAddress"
-                    value={formValues.emergencyAddress}
-                    onChange={handleInputChange}
-                  />
-                  </Grid>        
+              </Grid>
+              <Grid item xs={12} sm={7}>
+                <TextField
+                  required
+                  fullWidth
+                  multiline
+                  minRows={1}
+                  label="Address"
+                  variant="outlined"
+                  name="address"
+                  value={formValues.address}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                <hr />
+              </Grid>
               <Grid item xs={12} sm={6}>
-                <Button className="mt-[10px]" fullWidth type="submit" variant="contained" color="primary">
+                <TextField
+                  required
+                  fullWidth
+                  label="Emergency Full Name"
+                  variant="outlined"
+                  name="emergencyFullName"
+                  value={formValues.emergencyFullName}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  required
+                  fullWidth
+                  label="Emergency Phone Number"
+                  variant="outlined"
+                  name="emergencyPhoneNumber"
+                  value={formValues.emergencyPhone}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  required
+                  fullWidth
+                  multiline
+                  minRows={1}
+                  label="Emergency Address"
+                  variant="outlined"
+                  name="emergencyAddress"
+                  value={formValues.emergencyAddress}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Button
+                  className="mt-[10px]"
+                  fullWidth
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                >
                   {loading ? (
                     <CgSpinner size={25} className="animate-spin" />
-                  ) : "Submit"}
+                  ) : (
+                    "Submit"
+                  )}
                 </Button>
               </Grid>
             </Grid>
